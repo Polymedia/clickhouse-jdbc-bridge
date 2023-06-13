@@ -633,8 +633,8 @@ public class JdbcDataSource extends NamedDataSource {
                 if (typeName.equals("bool")) {
                     type = DataType.Str;
                 } else if (jdbcType == JDBCType.NUMERIC && scale == 0 && precision == 0) {
-                    scale = 20;
-                    precision = 4;
+                    scale = 4;
+                    precision = 20;
                 }
             }
             /* Visiology - End */
