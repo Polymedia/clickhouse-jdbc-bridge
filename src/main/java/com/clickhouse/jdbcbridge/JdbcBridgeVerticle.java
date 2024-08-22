@@ -240,7 +240,10 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
             httpServerConfig.put("maxInitialLineLength", 2147483647L);
         }
 
-        HttpServer server = vertx.createHttpServer(new HttpServerOptions(httpServerConfig));
+        HttpServerOptions opts = new HttpServerOptions(httpServerConfig);
+        opts.setCompressionSupported(true);
+        opts.setDecompressionSupported(true);
+        HttpServer server = vertx.createHttpServer(opts);
         // vertx.createHttpServer(new
         // HttpServerOptions().setTcpNoDelay(false).setTcpKeepAlive(true)
         // .setTcpFastOpen(true).setLogActivity(true));
