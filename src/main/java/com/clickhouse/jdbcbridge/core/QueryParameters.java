@@ -46,7 +46,7 @@ public class QueryParameters {
     public static final String PARAM_DEBUG = "debug";
 
     public static final int DEFAULT_BATCH_SIZE = 100;
-    public static final int DEFAULT_FETCH_SIZE = 1000;
+    public static final int DEFAULT_FETCH_SIZE = 10000;
     public static final int DEFAULT_MAX_ROWS = 0;
     public static final int DEFAULT_OFFSET = 0;
     public static final int DEFAULT_POSITION = 0;

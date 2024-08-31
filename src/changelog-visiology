@@ -1,0 +1,18 @@
+Changes:
+1. Disabled AutoCommit in PostgreSQL (https://github.com/ClickHouse/clickhouse-jdbc-bridge/issues/161):
+This change is required for stream processing.
+2. Added boolean-to-string conversion for PostgreSQL:
+This change prevents the error: Caused by: org.postgresql.util.PSQLException: Bad value for type int: t when querying boolean types.
+For example:
+SELECT * FROM jdbc('jdbc:postgresql://host:5432/microsoft_contoso_integration_100k?user=postgres&password=', 'SELECT true');
+3. Fixed precision loss for numeric types (https://github.com/ClickHouse/clickhouse-jdbc-bridge/issues/160):
+This resolves issues where precision was lost for numeric values.
+For example:
+SELECT * FROM jdbc('jdbc:postgresql://host:5432/microsoft_contoso_integration_100k?user=postgres&password=', 'SELECT 123.456789');
+4. Enabled HTTP compression:
+Compression has been enabled for future use.
+5. Minor refactoring of the DataTableReader->process method:
+This refactor slightly improves performance for wide tables.
+6. Disabled useless and frequent exceptions in logs from io.vertx.core.impl.BlockedThreadChecker.
+7. Increased DEFAULT_FETCH_SIZE from 1000 to 10,000:
+This increase has shown to improve efficiency by 20-30% in our cases.

@@ -15,6 +15,8 @@
  */
 package com.clickhouse.jdbcbridge.core;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -77,6 +79,12 @@ public interface DataTableReader {
 
         // Map<String, Integer> colName2Index = new HashMap<>();
         // build column indices: 0 -> Request column index; 1 -> ResultSet column index
+        
+        Map<String, Integer> resultColNameToIndex = new HashMap<>();
+        for (int j = 0; j < resultColumns.length; j++) {
+            resultColNameToIndex.put(resultColumns[j].getName(), j);
+        }
+
         int length = requestColumns.length;
         int[][] colIndices = new int[length][2];
 
@@ -104,14 +112,10 @@ public interface DataTableReader {
 
             // now result columns
             if (!matched) {
-                for (int j = 0; j < resultColumns.length; j++) {
-                    ColumnDefinition result = resultColumns[j];
-                    if (colName.equals(result.getName())) {
-                        // colIndices[i] = new int[] { i, j + 1 };
-                        colIndices[i] = new int[] { i, j };
-                        matched = true;
-                        break;
-                    }
+                Integer resultIndex = resultColNameToIndex.get(colName);
+                if (resultIndex != null) {
+                    colIndices[i] = new int[] { i, resultIndex };
+                    matched = true;
                 }
             }
 
