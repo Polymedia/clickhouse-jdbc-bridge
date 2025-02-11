@@ -17,13 +17,13 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-FROM adoptopenjdk/openjdk8-openj9:jre8u322-b06_openj9-0.30.0-ubuntu
+FROM adoptopenjdk/openjdk8-openj9:jre8u432-b06_openj9-0.48.0-ubuntu
 
 ARG revision=latest
 ARG repository=ClickHouse/clickhouse-jdbc-bridge
 
 # Maintainer
-LABEL maintainer="zhicwu@gmail.com"
+LABEL maintainer="Visiology"
 
 # Environment variables
 ENV JDBC_BRIDGE_HOME=/app JDBC_BRIDGE_VERSION=${revision} \
@@ -44,7 +44,7 @@ RUN apt-get update \
 		https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar \
 		https://repo1.maven.org/maven2/org/neo4j/neo4j-jdbc-driver/4.0.5/neo4j-jdbc-driver-4.0.5.jar \
 		https://repo1.maven.org/maven2/com/amazon/opendistroforelasticsearch/client/opendistro-sql-jdbc/1.13.0.0/opendistro-sql-jdbc-1.13.0.0.jar \
-		https://repo1.maven.org/maven2/org/postgresql/postgresql/42.3.4/postgresql-42.3.4.jar \
+		https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.5/postgresql-42.7.5.jar \
 		https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar \
 		https://repo1.maven.org/maven2/io/trino/trino-jdbc/377/trino-jdbc-377.jar \
 	&& export JDBC_BRIDGE_REL_URL=$JDBC_BRIDGE_REL_URL/v$JDBC_BRIDGE_VERSION \
