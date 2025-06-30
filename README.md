@@ -264,7 +264,7 @@ Assuming you started a test environment using docker-compose, please refer to ex
                 "drivers/mariadb",
                 "D:\\drivers\\mariadb",
                 "/mnt/d/drivers/mariadb",
-                "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.7.4/mariadb-java-client-2.7.4.jar"
+                "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar"
             ],
             "driverClassName": "org.mariadb.jdbc.Driver",
             ...
@@ -317,8 +317,23 @@ Assuming you started a test environment using docker-compose, please refer to ex
 
     2.x is a complete re-write not fully compatible with older version. You'll have to re-define your datasources and update your queries accordingly.
 
+* Latest Updates (2.1.0+)
+
+    Recent versions include significant improvements:
+    - **Java 21 LTS**: Enhanced performance and security
+    - **Enhanced PostgreSQL Support**: Improved boolean and numeric type handling
+    - **Performance Optimizations**: Increased default fetch size (10K rows), improved query processing
+    - **Updated Dependencies**: Latest JDBC drivers, connection pooling, and caching libraries
+    - **HTTP Compression**: Enabled for better network efficiency
+    - **Modern Logging**: SLF4J 2.x with enhanced debugging capabilities
+
 
 ## Build
+
+**System Requirements:**
+- Java 21 LTS or later (OpenJDK or Eclipse Temurin recommended)
+- Maven 3.6+ 
+- Docker (optional, for container builds)
 
 You can use Maven to build ClickHouse JDBC bridge, for examples:
 ```bash
@@ -335,8 +350,8 @@ In order to build docker images:
 git clone https://github.com/ClickHouse/clickhouse-jdbc-bridge.git
 cd clickhouse-jdbc-bridge
 docker build -t my/clickhouse-jdbc-bridge .
-# or if you want to build the all-ine-one image
-docker build --build-arg revision=20.9.3 -f all-in-one.Dockerfile -t my/clickhouse-all-in-one .
+# or if you want to build the all-in-one image
+docker build --build-arg revision=24.3 -f all-in-one.Dockerfile -t my/clickhouse-all-in-one .
 ```
 
 ## Develop

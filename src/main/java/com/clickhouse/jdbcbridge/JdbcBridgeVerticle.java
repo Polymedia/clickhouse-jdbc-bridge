@@ -259,8 +259,8 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
 
         router.route("/metrics").handler(PrometheusScrapingHandler.create());
 
-        router.route().handler(BodyHandler.create()).handler(this::responseHandlers)
-                .handler(ResponseContentTypeHandler.create()).failureHandler(this::errorHandler);
+        router.route().handler(ResponseContentTypeHandler.create()).handler(BodyHandler.create())
+            .handler(this::responseHandlers).failureHandler(this::errorHandler);
 
         // stateless endpoints
         router.get("/ping").handler(requestTimeoutHandler).handler(this::handlePing);
@@ -314,7 +314,11 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
                 log.trace("[{}] About to drain response...", ctx.normalisedPath());
             }
         }).exceptionHandler(throwable -> {
-            log.error("Caught exception", throwable);
+            // More detailed exception logging
+            HttpServerResponse response = ctx.response();
+            log.error("Caught exception - Type: {}, Message: {}, Response closed: {}, Response ended: {}",
+                     throwable.getClass().getSimpleName(), throwable.getMessage(),
+                     response.closed(), response.ended(), throwable);
         });
 
         ctx.next();
@@ -595,7 +599,8 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
             if (action.succeeded()) {
                 vertx.executeBlocking(promise -> {
                     consumer.accept(action.result());
-                }, true, res -> {
+                    promise.complete();
+                }, true).onComplete(res -> {
                     if (!res.succeeded()) {
                         log.error("Failed to load configuration", res.cause());
                     }
@@ -610,7 +615,8 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
 
             vertx.executeBlocking(promise -> {
                 consumer.accept(change.getNewConfiguration());
-            }, true, res -> {
+                promise.complete();
+            }, true).onComplete(res -> {
                 if (!res.succeeded()) {
                     log.error("Failed to reload configuration", res.cause());
                 }

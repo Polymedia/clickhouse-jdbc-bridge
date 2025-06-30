@@ -16,3 +16,49 @@ This refactor slightly improves performance for wide tables.
 6. Disabled useless and frequent exceptions in logs from io.vertx.core.impl.BlockedThreadChecker.
 7. Increased DEFAULT_FETCH_SIZE from 1000 to 10,000:
 This increase has shown to improve efficiency by 20-30% in our cases.
+8. Upgraded Java runtime from 1.8 to 21 LTS:
+Updated the project to use Java 21 LTS (Eclipse Temurin) for improved performance, security, and modern JVM features.
+Maven plugins were updated to compatible versions: compiler-plugin (3.12.1), surefire-plugin (3.2.5), failsafe-plugin (3.2.5), shade-plugin (3.5.1).
+Docker images now use eclipse-temurin:21-jre base image instead of adoptopenjdk/openjdk8-openj9.
+JVM options were modernized: replaced OpenJ9-specific flags with HotSpot optimizations (UseG1GC, UseStringDeduplication, ExitOnOutOfMemoryError).
+This upgrade provides better garbage collection, enhanced security, and improved overall application performance.
+9. Updated Caffeine cache library from 2.9.3 to 3.2.1:
+Improved compatibility with Java 21 LTS and full GraalVM Native Image support.
+Includes performance optimizations, bug fixes, and security updates.
+The latest version is officially supported by GraalVM Native Image compilation.
+10. Updated PostgreSQL JDBC Driver to 42.7.7:
+Updated from various older versions (42.2.24, 42.3.4, 42.7.5) to the latest stable release.
+Provides enhanced security, improved Java 21 compatibility, and better performance.
+Includes fixes for connection handling, prepared statements optimization, and SSL improvements.
+The driver is fully compatible with GraalVM Native Image and modern PostgreSQL server versions.
+11. Updated HikariCP connection pool from 3.4.5 to 5.1.0:
+Improved Java 21 LTS compatibility and better GraalVM Native Image support.
+Enhanced performance monitoring, faster connection management, and updated security patches.
+Provides better connection pool metrics and improved resource management.
+12. Updated dnsjava library from 3.5.0 to 3.6.3:
+Enhanced DNS resolution functionality with improved Java 21 LTS compatibility.
+Includes critical security fixes for CVE-2024-25638 and CVE-2023-50387 (KeyTrap vulnerabilities).
+Provides better DNSSEC support, improved query performance, and enhanced error handling.
+Fixed various memory leaks and concurrency issues in DNS resolution operations.
+The update brings full JPMS (Java Platform Module System) support and optimized resource management.
+13. Updated SLF4J logging framework from 1.7.36 to 2.0.17:
+Major version upgrade with improved logging performance and modernized architecture.
+Enhanced Service Provider Interface (SPI) for better logging backend integration.
+Provides backward compatibility for existing logging code while offering new features.
+Includes optimized memory usage, faster logging operations, and improved thread safety.
+Full compatibility with Java 21 LTS and better integration with modern logging frameworks.
+The update brings enhanced debugging capabilities and more efficient log message formatting.
+14. Introduced Vert.x BOM (Bill of Materials) for centralized dependency management:
+Added Vert.x BOM (vertx-dependencies) to dependencyManagement section for consistent version control across all Vert.x modules.
+This approach eliminates version conflicts and ensures compatibility between different Vert.x components.
+All Vert.x dependencies now inherit versions from the BOM, removing the need to specify individual versions.
+Provides better dependency management, reduces maintenance overhead, and prevents version mismatches.
+The BOM ensures that all Vert.x modules use compatible versions tested together by the Vert.x team.
+15. Updated Vert.x framework from 3.9.13 to 4.5.1 with breaking changes adaptations:
+Major version upgrade from Vert.x 3.x to 4.x series with significant improvements in performance and functionality.
+Updated all Vert.x modules: vertx-core, vertx-config, vertx-web, vertx-web-client, and vertx-micrometer-metrics.
+Adapted codebase to handle breaking changes in Vert.x 4.x API, including updated method signatures and configuration patterns.
+Enhanced HTTP server configuration, improved routing mechanisms, and better metrics integration.
+The upgrade provides better Java 21 LTS compatibility, enhanced security features, and improved async processing.
+Includes performance optimizations, modernized event loop handling, and better resource management.
+Full compatibility with GraalVM Native Image compilation and reduced memory footprint in containerized environments.

@@ -24,7 +24,7 @@ ARG revision=22.3
 #
 # Stage 1/2: Build
 #
-FROM maven:3-openjdk-8 as builder
+FROM maven:3.9-eclipse-temurin-21 as builder
 
 ARG revision
 
@@ -66,7 +66,7 @@ RUN apt-get update \
 	&& wget -q -P /etc/clickhouse-jdbc-bridge/drivers/mysql8 \
 		https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar \
 	&& wget -q -P /etc/clickhouse-jdbc-bridge/drivers/postgres \
-		https://repo1.maven.org/maven2/org/postgresql/postgresql/42.3.4/postgresql-42.3.4.jar \
+		https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.7/postgresql-42.7.7.jar \
 	&& sed -i -e 's|\(^[[:space:]]*\)\(exec.*clickhouse-server.*$\)|\1exec -c clickhouse-jdbc-bridge >/dev/null \&\n\1\2|' /entrypoint.sh \
 	&& echo '{\n\
 	"$schema": "../datasource-schema.json",\n\

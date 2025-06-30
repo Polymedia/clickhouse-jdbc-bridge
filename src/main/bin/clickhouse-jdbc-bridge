@@ -44,7 +44,7 @@ init_env() {
 start_server() {
     # override below environment variables as needed in $INIT_SCRIPT
     : ${APP_PACKAGE:="/usr/local/lib/java/clickhouse-jdbc-bridge-shaded.jar"}
-    : ${JVM_ARGS:="-Xmx512m"}
+    : ${JVM_ARGS:="-XX:+UseContainerSupport -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+ExitOnOutOfMemoryError -Xmx512m"}
     : ${WORK_DIRECTORY:=$(dirname "$INIT_SCRIPT")}
 
     # kill server if it's running
