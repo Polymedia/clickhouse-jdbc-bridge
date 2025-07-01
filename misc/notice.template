@@ -1,8 +1,11 @@
 clickhouse-jdbc-bridge
 Copyright 2019-2021, Zhichun Wu.
+Copyright 2023-2025, Visiology.
 
 This project includes software developed by Zhichun Wu.
 https://github.com/zhicwu
+
+This project is currently maintained by Visiology.
 
 Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance

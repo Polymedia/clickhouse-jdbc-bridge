@@ -61,11 +61,35 @@ docker run --rm -v ${PWD}:/usr/src/app -w /usr/src/app maven:3.9-eclipse-temurin
 
 ## 🐳 Docker Build Commands
 
-### Сборка Docker образа
+### Сборка Docker образа (с выполнением тестов)
 
 ```bash
 docker build -t clickhouse-jdbc-bridge:latest .
 ```
+
+### Сборка Docker образа без выполнения тестов (быстрая сборка)
+
+```bash
+docker build --build-arg SKIP_TESTS=true -t clickhouse-jdbc-bridge:latest .
+```
+
+### Сборка с явным указанием выполнения тестов
+
+```bash
+docker build --build-arg SKIP_TESTS=false -t clickhouse-jdbc-bridge:latest .
+```
+
+### 💡 Рекомендации по сборке
+
+**🎯 С тестами (по умолчанию)**:
+- Рекомендуется для production сборок
+- Гарантирует качество кода
+- Займет больше времени
+
+**⚡ Без тестов (SKIP_TESTS=true)**:
+- Для быстрого тестирования изменений
+- При разработке и отладке
+- Когда тесты уже прошли в CI/CD
 
 ### Запуск контейнера
 

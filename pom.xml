@@ -131,6 +131,26 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- JavaScript Engine for ScriptDataSource (replacement for removed Nashorn in Java 21) -->
+        <!-- Using GraalVM Polyglot API with Community Edition for full open source compatibility -->
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>polyglot</artifactId>
+            <version>24.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>js-community</artifactId>
+            <version>24.1.0</version>
+            <type>pom</type>
+        </dependency>
+        <!-- GraalVM Scripting API for JSR-223 compatibility (needed for ScriptEngineManager) -->
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js-scriptengine</artifactId>
+            <version>24.1.0</version>
+        </dependency>
+
         <!-- Unit/Integration test -->
         <dependency>
             <groupId>org.testcontainers</groupId>
