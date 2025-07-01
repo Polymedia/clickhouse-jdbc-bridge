@@ -28,3 +28,8 @@ This increase has shown to improve efficiency by 20-30% in our cases.
 Added vertx-dependencies BOM to eliminate version conflicts and ensure compatibility across all Vert.x modules.
 10. Updated Dockerfile to use Java 21 LTS base image:
 Replaced adoptopenjdk/openjdk8-openj9 with eclipse-temurin:21.0.7_6-jre base image and updated JVM options for better performance and compatibility.
+11. Updated JDBC drivers to latest secure versions to fix 7 HIGH vulnerabilities:
+- clickhouse-jdbc: 0.3.2-patch8 → 0.9.0 (fixes CVE-2024-23689)
+- mysql-connector-java: 8.0.28 → mysql-connector-j 9.1.0 (fixes CVE-2023-22102)
+- neo4j-jdbc-driver: 4.0.5 → neo4j-jdbc-full-bundle 6.6.0 (fixes 4 Jackson CVEs)
+- sqlite-jdbc: 3.36.0.3 → 3.45.3.0 (fixes CVE-2023-32697)

@@ -71,13 +71,13 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& mkdir -p $JDBC_BRIDGE_HOME/drivers \
 	&& wget -P $JDBC_BRIDGE_HOME/drivers \
-		https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.3.2-patch8/clickhouse-jdbc-0.3.2-patch8-all.jar \
+		https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.9.0/clickhouse-jdbc-0.9.0-all.jar \
 		https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar \
-		https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar \
-		https://repo1.maven.org/maven2/org/neo4j/neo4j-jdbc-driver/4.0.5/neo4j-jdbc-driver-4.0.5.jar \
+		https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/9.1.0/mysql-connector-j-9.1.0.jar \
+		https://repo1.maven.org/maven2/org/neo4j/neo4j-jdbc-full-bundle/6.6.0/neo4j-jdbc-full-bundle-6.6.0.jar \
 		https://repo1.maven.org/maven2/com/amazon/opendistroforelasticsearch/client/opendistro-sql-jdbc/1.13.0.0/opendistro-sql-jdbc-1.13.0.0.jar \
 		https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.7/postgresql-42.7.7.jar \
-		https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.36.0.3/sqlite-jdbc-3.36.0.3.jar \
+		https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.45.3.0/sqlite-jdbc-3.45.3.0.jar \
 		https://repo1.maven.org/maven2/io/trino/trino-jdbc/377/trino-jdbc-377.jar \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

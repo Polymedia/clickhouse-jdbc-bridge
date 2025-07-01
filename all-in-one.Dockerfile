@@ -58,13 +58,13 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /*.deb /var/lib/apt/lists/* /tmp/* /var/tmp/* \
 	&& wget -q -P /etc/clickhouse-jdbc-bridge/drivers/clickhouse \
-		https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.3.2-patch8/clickhouse-jdbc-0.3.2-patch8-all.jar \
+		https://repo1.maven.org/maven2/com/clickhouse/clickhouse-jdbc/0.9.0/clickhouse-jdbc-0.9.0-all.jar \
 	&& wget -q -P /etc/clickhouse-jdbc-bridge/drivers/mariadb \
 		https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.0.4/mariadb-java-client-3.0.4.jar \
 	&& wget -q -P /etc/clickhouse-jdbc-bridge/drivers/mysql5 \
 		https://repo1.maven.org/maven2/mysql/mysql-connector-java/5.1.49/mysql-connector-java-5.1.49.jar \
 	&& wget -q -P /etc/clickhouse-jdbc-bridge/drivers/mysql8 \
-		https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.28/mysql-connector-java-8.0.28.jar \
+		https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/9.1.0/mysql-connector-j-9.1.0.jar \
 	&& wget -q -P /etc/clickhouse-jdbc-bridge/drivers/postgres \
 		https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.7/postgresql-42.7.7.jar \
 	&& sed -i -e 's|\(^[[:space:]]*\)\(exec.*clickhouse-server.*$\)|\1exec -c clickhouse-jdbc-bridge >/dev/null \&\n\1\2|' /entrypoint.sh \
