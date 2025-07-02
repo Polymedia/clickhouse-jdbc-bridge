@@ -611,6 +611,8 @@
                                 <exclude>META-INF/maven/**</exclude>
                                 <exclude>META-INF/versions/**</exclude>
                                 <exclude>META-INF/*.xml</exclude>
+                                <!-- Exclude InetAddressResolverProvider service to avoid conflicts with JDBC drivers -->
+                                <exclude>META-INF/services/java.net.spi.InetAddressResolverProvider</exclude>
                             </excludes>
                         </filter>
                     </filters>
