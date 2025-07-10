@@ -1,8 +1,11 @@
 clickhouse-jdbc-bridge
 Copyright 2019-2021, Zhichun Wu.
+Copyright 2023-2025, Visiology.
 
 This project includes software developed by Zhichun Wu.
 https://github.com/zhicwu
+
+This project is currently maintained by Visiology.
 
 Licensed under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
@@ -20,27 +23,35 @@ under the License.
 This project includes:
   Apache Commons Compress under Apache License, Version 2.0
   Caffeine cache under Apache License, Version 2.0
-  Checker Qual under The MIT License
   ClickHouse JDBC Bridge under Apache License, Version 2.0
+  Collections under Universal Permissive License, Version 1.0
   dnsjava under BSD-3-Clause
   docker-java-api under The Apache Software License, Version 2.0
   docker-java-transport under The Apache Software License, Version 2.0
   docker-java-transport-zerodep under The Apache Software License, Version 2.0
   Duct Tape under MIT
   error-prone annotations under Apache 2.0
+  Graaljs under Universal Permissive License, Version 1.0 or MIT License
+  Graaljs Scriptengine under Universal Permissive License, Version 1.0
   Hamcrest Core under New BSD License
   HdrHistogram under Public Domain, per Creative Commons CC0 or BSD-2-Clause
   HikariCP under The Apache Software License, Version 2.0
   Jackson-annotations under The Apache Software License, Version 2.0
   Jackson-core under The Apache Software License, Version 2.0
-  jackson-databind under The Apache Software License, Version 2.0
   Java Native Access under LGPL, version 2.1 or Apache License v2.0
   jcommander under Apache 2.0
   JetBrains Java Annotations under The Apache Software License, Version 2.0
+  Jniutils under Universal Permissive License, Version 1.0
+  Js Community under Universal Permissive License, Version 1.0 or MIT License
+  Js Community Polyglot under MIT License or Universal Permissive License, Version 1.0
+  JSpecify annotations under The Apache License, Version 2.0
   JUnit under Eclipse Public License 1.0
   LatencyUtils under Public Domain, per Creative Commons CC0
+  micrometer-commons under The Apache Software License, Version 2.0
   micrometer-core under The Apache Software License, Version 2.0
+  micrometer-observation under The Apache Software License, Version 2.0
   micrometer-registry-prometheus under The Apache Software License, Version 2.0
+  Nativeimage under Universal Permissive License, Version 1.0
   Netty/Buffer under Apache License, Version 2.0
   Netty/Codec under Apache License, Version 2.0
   Netty/Codec/DNS under Apache License, Version 2.0
@@ -52,20 +63,31 @@ This project includes:
   Netty/Handler/Proxy under Apache License, Version 2.0
   Netty/Resolver under Apache License, Version 2.0
   Netty/Resolver/DNS under Apache License, Version 2.0
-  Netty/TomcatNative [OpenSSL - Classes] under The Apache Software License, Version 2.0
   Netty/Transport under Apache License, Version 2.0
+  Netty/Transport/Native/Unix/Common under Apache License, Version 2.0
+  Polyglot under Universal Permissive License, Version 1.0
   Prometheus Java Simpleclient under The Apache Software License, Version 2.0
   Prometheus Java Simpleclient Common under The Apache Software License, Version 2.0
-  SLF4J API Module under MIT License
-  SLF4J JDK14 Binding under MIT License
+  Prometheus Java Span Context Supplier - Common under The Apache Software License, Version 2.0
+  Prometheus Java Span Context Supplier - OpenTelemetry under The Apache Software License, Version 2.0
+  Prometheus Java Span Context Supplier - OpenTelemetry Agent under The Apache Software License, Version 2.0
+  SLF4J API Module under MIT
+  SLF4J JDK14 Provider under MIT
   Testcontainers Core under MIT
   testng under Apache 2.0
+  Tregex under Universal Permissive License, Version 1.0
+  Truffle API under Universal Permissive License, Version 1.0
+  Truffle Compiler under Universal Permissive License, Version 1.0
+  Truffle Icu4j under Unicode/ICU License
+  Truffle Runtime under Universal Permissive License, Version 1.0
   Vert.x Bridge Common under The Apache Software License, Version 2.0 or Eclipse Public License - v 1.0
   Vert.x Core under The Apache Software License, Version 2.0 or Eclipse Public License - v 2.0
   Vert.x metrics implementation for Micrometer.io under The Apache Software License, Version 2.0 or Eclipse Public License - v 1.0
+  Vert.x URI Template under The Apache Software License, Version 2.0 or Eclipse Public License - v 1.0
   vertx-auth-common under The Apache Software License, Version 2.0 or Eclipse Public License - v 1.0
   vertx-config under Apache License, Version 2.0
   vertx-web under The Apache Software License, Version 2.0 or Eclipse Public License - v 2.0
   vertx-web-client under The Apache Software License, Version 2.0 or Eclipse Public License - v 1.0
   vertx-web-common under The Apache Software License, Version 2.0 or Eclipse Public License - v 1.0
+  Word under Universal Permissive License, Version 1.0
 

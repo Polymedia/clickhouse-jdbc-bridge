@@ -11,15 +11,16 @@
     <inceptionYear>2019</inceptionYear>
 
     <properties>
-        <caffeine.version>2.9.3</caffeine.version>
-        <dnsjava.version>3.5.0</dnsjava.version>
-        <vertx.version>3.9.13</vertx.version>
-        <micrometer.version>1.1.19</micrometer.version>
-        <slf4j.version>1.7.36</slf4j.version>
-        <hikaricp.version>3.4.5</hikaricp.version>
+        <caffeine.version>3.2.1</caffeine.version>
+        <dnsjava.version>3.6.3</dnsjava.version>
+        <!-- Vert.x version used for BOM import -->
+        <vertx.version>4.5.1</vertx.version>
+        <micrometer.version>1.10.13</micrometer.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <hikaricp.version>5.1.0</hikaricp.version>
         <project.current.year>2022</project.current.year>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        <java.version>21</java.version>
         <testcontainers.version>1.16.3</testcontainers.version>
         <testng.version>6.14.3</testng.version>
         <main.basedir>${project.basedir}</main.basedir>
@@ -29,13 +30,13 @@
         <replacer-plugin.version>1.5.3</replacer-plugin.version>
         <license-plugin.version>2.11</license-plugin.version>
         <notice-plugin.version>1.1.0</notice-plugin.version>
-        <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <compiler-plugin.version>3.12.1</compiler-plugin.version>
         <source-plugin.version>3.2.1</source-plugin.version>
         <jar-plugin.version>3.2.0</jar-plugin.version>
         <javadoc-plugin.version>3.2.0</javadoc-plugin.version>
-        <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-        <failsafe-plugin.version>3.0.0-M5</failsafe-plugin.version>
-        <shade-plugin.version>3.2.4</shade-plugin.version>
+        <surefire-plugin.version>3.2.5</surefire-plugin.version>
+        <failsafe-plugin.version>3.2.5</failsafe-plugin.version>
+        <shade-plugin.version>3.5.1</shade-plugin.version>
         <shade.base>com.clickhouse.jdbcbridge.internal</shade.base>
         <deb-plugin.version>1.0.20</deb-plugin.version>
         <rpm-plugin.version>2.2.0</rpm-plugin.version>
@@ -88,31 +89,26 @@
             <version>${dnsjava.version}</version>
         </dependency>
 
-        <!-- Async Web server -->
+        <!-- Async Web server (versions managed by Vert.x BOM) -->
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>${vertx.version}</version>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-config</artifactId>
-            <version>${vertx.version}</version>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
-            <version>${vertx.version}</version>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web-client</artifactId>
-            <version>${vertx.version}</version>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-micrometer-metrics</artifactId>
-            <version>${vertx.version}</version>
         </dependency>
 
         <!-- Monitoring -->
@@ -132,6 +128,27 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
             <version>${slf4j.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- JavaScript Engine for ScriptDataSource (replacement for removed Nashorn in Java 21) -->
+        <!-- Using GraalVM Polyglot API with Community Edition for full open source compatibility -->
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>polyglot</artifactId>
+            <version>24.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.graalvm.polyglot</groupId>
+            <artifactId>js-community</artifactId>
+            <version>24.1.0</version>
+            <type>pom</type>
+        </dependency>
+        <!-- GraalVM Scripting API for JSR-223 compatibility (needed for ScriptEngineManager) -->
+        <dependency>
+            <groupId>org.graalvm.js</groupId>
+            <artifactId>js-scriptengine</artifactId>
+            <version>24.1.0</version>
         </dependency>
 
         <!-- Unit/Integration test -->
@@ -154,6 +171,19 @@
             </exclusions>
         </dependency>
     </dependencies>
+
+    <!-- Vert.x BOM for centralized version management -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-dependencies</artifactId>
+                <version>${vertx.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <!-- http://central.sonatype.org/pages/apache-maven.html -->
     <distributionManagement>
@@ -266,7 +296,7 @@
                                 </copyResource>
                             </copyResources>
                             <packageDependencies>
-                                <packageDependency>default-jre</packageDependency>
+                                <packageDependency>openjdk-21-jre</packageDependency>
                             </packageDependencies>
                         </configuration>
                     </plugin>
@@ -290,7 +320,7 @@
                                 <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
                             </defineStatements>
                             <requires>
-                                <require>jre-headless &gt;= 1.8</require>
+                                <require>jre-headless &gt;= 21</require>
                             </requires>
                             <mappings>
                                 <mapping>
@@ -553,10 +583,13 @@
                             <pattern>org.xbill.DNS</pattern>
                             <shadedPattern>${shade.base}.dnsjava</shadedPattern>
                         </relocation>
+                        <!-- Exclude SLF4J from relocation to allow external JDBC drivers to use it -->
+                        <!--
                         <relocation>
                             <pattern>org.slf4j</pattern>
                             <shadedPattern>${shade.base}.slf4j</shadedPattern>
                         </relocation>
+                        -->
                         <relocation>
                             <pattern>org.HdrHistogram</pattern>
                             <shadedPattern>${shade.base}.HdrHistogram</shadedPattern>
@@ -576,9 +609,10 @@
                             <artifact>*:*</artifact>
                             <excludes>
                                 <exclude>META-INF/maven/**</exclude>
-                                <exclude>META-INF/native-image/**</exclude>
                                 <exclude>META-INF/versions/**</exclude>
                                 <exclude>META-INF/*.xml</exclude>
+                                <!-- Exclude InetAddressResolverProvider service to avoid conflicts with JDBC drivers -->
+                                <exclude>META-INF/services/java.net.spi.InetAddressResolverProvider</exclude>
                             </excludes>
                         </filter>
                     </filters>
