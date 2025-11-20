@@ -259,19 +259,25 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
 
         router.route("/metrics").handler(PrometheusScrapingHandler.create());
 
-        router.route().handler(ResponseContentTypeHandler.create()).handler(BodyHandler.create())
-            .handler(this::responseHandlers).failureHandler(this::errorHandler);
+        router.route().handler(ResponseContentTypeHandler.create())
+                .handler(this::responseHandlers).failureHandler(this::errorHandler);
 
         // stateless endpoints
         router.get("/ping").handler(requestTimeoutHandler).handler(this::handlePing);
         router.get("/schema_allowed").handler(requestTimeoutHandler).handler(this::handleSchemaAllowed);
 
-        router.post("/identifier_quote").produces(RESPONSE_CONTENT_TYPE).handler(requestTimeoutHandler)
+        router.post("/identifier_quote").produces(RESPONSE_CONTENT_TYPE)
+                .handler(BodyHandler.create())
+                .handler(requestTimeoutHandler)
                 .handler(this::handleIdentifierQuote);
-        router.post("/columns_info").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler)
-                .handler(this::handleColumnsInfo);
-        router.post("/").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler).blockingHandler(this::handleQuery,
-                SERIAL_MODE);
+        router.post("/columns_info").produces(RESPONSE_CONTENT_TYPE)
+                .handler(BodyHandler.create())
+                .handler(queryTimeoutHandler)
+                .blockingHandler(this::handleColumnsInfo, SERIAL_MODE);
+        router.post("/").produces(RESPONSE_CONTENT_TYPE)
+                .handler(BodyHandler.create())
+                .handler(queryTimeoutHandler)
+                .blockingHandler(this::handleQuery, SERIAL_MODE);
         router.post("/write").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler)
                 .blockingHandler(this::handleWrite, SERIAL_MODE);
 
