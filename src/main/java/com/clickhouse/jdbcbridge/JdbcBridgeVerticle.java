@@ -230,7 +230,7 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
 
         startServer(config,
                 Utils.loadJsonFromFile(Paths.get(CONFIG_PATH,
-                        Utils.getConfiguration("httpd.json", "HTTPD_CONFIG_FILE", "jdbc-bridge.httpd.config.file"))
+                                Utils.getConfiguration("httpd.json", "HTTPD_CONFIG_FILE", "jdbc-bridge.httpd.config.file"))
                         .toString()));
     }
 
@@ -260,7 +260,7 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
         router.route("/metrics").handler(PrometheusScrapingHandler.create());
 
         router.route().handler(ResponseContentTypeHandler.create()).handler(BodyHandler.create())
-            .handler(this::responseHandlers).failureHandler(this::errorHandler);
+                .handler(this::responseHandlers).failureHandler(this::errorHandler);
 
         // stateless endpoints
         router.get("/ping").handler(requestTimeoutHandler).handler(this::handlePing);
@@ -269,11 +269,44 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
         router.post("/identifier_quote").produces(RESPONSE_CONTENT_TYPE).handler(requestTimeoutHandler)
                 .handler(this::handleIdentifierQuote);
         router.post("/columns_info").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler)
-                .handler(this::handleColumnsInfo);
-        router.post("/").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler).blockingHandler(this::handleQuery,
-                SERIAL_MODE);
+                .handler(ctx -> vertx.executeBlocking(promise -> {
+                    try {
+                        handleColumnsInfo(ctx);
+                        promise.complete();
+                    } catch (Exception e) {
+                        promise.fail(e);
+                    }
+                }, false, result -> {
+                    if (result.failed()) {
+                        errorHandler(ctx);
+                    }
+                }));
+        router.post("/").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler)
+                .handler(ctx -> vertx.executeBlocking(promise -> {
+                    try {
+                        handleQuery(ctx);
+                        promise.complete();
+                    } catch (Exception e) {
+                        promise.fail(e);
+                    }
+                }, false, result -> {
+                    if (result.failed()) {
+                        errorHandler(ctx);
+                    }
+                }));
         router.post("/write").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler)
-                .blockingHandler(this::handleWrite, SERIAL_MODE);
+                .handler(ctx -> vertx.executeBlocking(promise -> {
+                    try {
+                        handleWrite(ctx);
+                        promise.complete();
+                    } catch (Exception e) {
+                        promise.fail(e);
+                    }
+                }, false, result -> {
+                    if (result.failed()) {
+                        errorHandler(ctx);
+                    }
+                }));
 
         log.info("Starting web server...");
         int port = bridgeServerConfig.getInteger("serverPort", DEFAULT_SERVER_PORT);
@@ -317,8 +350,8 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
             // More detailed exception logging
             HttpServerResponse response = ctx.response();
             log.error("Caught exception - Type: {}, Message: {}, Response closed: {}, Response ended: {}",
-                     throwable.getClass().getSimpleName(), throwable.getMessage(),
-                     response.closed(), response.ended(), throwable);
+                    throwable.getClass().getSimpleName(), throwable.getMessage(),
+                    response.closed(), response.ended(), throwable);
         });
 
         ctx.next();
