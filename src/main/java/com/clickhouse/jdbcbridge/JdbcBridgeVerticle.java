@@ -278,7 +278,9 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
                 .handler(BodyHandler.create())
                 .handler(queryTimeoutHandler)
                 .blockingHandler(this::handleQuery, SERIAL_MODE);
-        router.post("/write").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler)
+        router.post("/write").produces(RESPONSE_CONTENT_TYPE)
+                .handler(BodyHandler.create())
+                .handler(queryTimeoutHandler)
                 .blockingHandler(this::handleWrite, SERIAL_MODE);
 
         log.info("Starting web server...");
