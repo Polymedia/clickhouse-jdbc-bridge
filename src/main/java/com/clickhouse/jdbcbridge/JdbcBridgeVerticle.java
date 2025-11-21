@@ -268,7 +268,8 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
 
         router.post("/identifier_quote").produces(RESPONSE_CONTENT_TYPE).handler(requestTimeoutHandler)
                 .handler(this::handleIdentifierQuote);
-        router.post("/columns_info").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler)
+        router.post("/columns_info").produces(RESPONSE_CONTENT_TYPE)
+                .handler(queryTimeoutHandler)
                 .handler(ctx -> vertx.executeBlocking(promise -> {
                     try {
                         handleColumnsInfo(ctx);
@@ -276,12 +277,14 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
                     } catch (Exception e) {
                         promise.fail(e);
                     }
-                }, false, result -> {
-                    if (result.failed()) {
-                        errorHandler(ctx);
+                }, SERIAL_MODE, ar -> {
+                    if (ar.failed()) {
+                        ctx.fail(ar.cause());
                     }
                 }));
-        router.post("/").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler)
+
+        router.post("/").produces(RESPONSE_CONTENT_TYPE)
+                .handler(queryTimeoutHandler)
                 .handler(ctx -> vertx.executeBlocking(promise -> {
                     try {
                         handleQuery(ctx);
@@ -289,12 +292,14 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
                     } catch (Exception e) {
                         promise.fail(e);
                     }
-                }, false, result -> {
-                    if (result.failed()) {
-                        errorHandler(ctx);
+                }, SERIAL_MODE, ar -> {
+                    if (ar.failed()) {
+                        ctx.fail(ar.cause());
                     }
                 }));
-        router.post("/write").produces(RESPONSE_CONTENT_TYPE).handler(queryTimeoutHandler)
+
+        router.post("/write").produces(RESPONSE_CONTENT_TYPE)
+                .handler(queryTimeoutHandler)
                 .handler(ctx -> vertx.executeBlocking(promise -> {
                     try {
                         handleWrite(ctx);
@@ -302,9 +307,9 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
                     } catch (Exception e) {
                         promise.fail(e);
                     }
-                }, false, result -> {
-                    if (result.failed()) {
-                        errorHandler(ctx);
+                }, SERIAL_MODE, ar -> {
+                    if (ar.failed()) {
+                        ctx.fail(ar.cause());
                     }
                 }));
 
