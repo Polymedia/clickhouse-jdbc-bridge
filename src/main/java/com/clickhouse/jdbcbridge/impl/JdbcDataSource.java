@@ -654,8 +654,11 @@ public class JdbcDataSource extends NamedDataSource {
             stmt.setMaxRows(1);
             stmt.setFetchSize(1);
 
+            boolean tableQuery = false;
+
             // in case it's a table query
             if (!Utils.containsWhitespace(loadedQuery)) {
+                tableQuery = true;
                 // let's generate a query based on given schema name, table name and column list
                 String quote = this.getQuoteIdentifier();
                 StringBuilder sb = new StringBuilder().append(QUERY_TABLE_BEGIN);
@@ -666,7 +669,8 @@ public class JdbcDataSource extends NamedDataSource {
                 loadedQuery = sb.append(quote).append(loadedQuery).append(quote).append(QUERY_TABLE_END).toString();
             }
 
-            if (loadedQuery != null && loadedQuery.indexOf(' ') == -1) {
+            if (!tableQuery && loadedQuery != null && loadedQuery.indexOf(' ') == -1) {
+                tableQuery = true;
                 StringBuilder sb = new StringBuilder().append(QUERY_TABLE_BEGIN);
                 String quote = this.getQuoteIdentifier();
                 if (schema != null && schema.length() > 0) {
@@ -675,7 +679,15 @@ public class JdbcDataSource extends NamedDataSource {
                 loadedQuery = sb.append(quote).append(loadedQuery).append(quote).append(QUERY_TABLE_END).toString();
             }
 
-            // could be very slow...
+            if (!tableQuery && loadedQuery != null) {
+                String q = loadedQuery.trim();
+                while (q.endsWith(";")) {
+                    q = q.substring(0, q.length() - 1).trim();
+                }
+                loadedQuery = new StringBuilder(q.length() + 64).append(QUERY_TABLE_BEGIN).append('(').append(q)
+                        .append(") t").append(QUERY_TABLE_END).toString();
+            }
+
             ColumnDefinition[] columns = getColumnsFromResultSet(getFirstQueryResult(stmt, stmt.execute(loadedQuery)),
                     params);
 
