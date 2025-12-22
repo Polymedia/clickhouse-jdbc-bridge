@@ -684,8 +684,27 @@ public class JdbcDataSource extends NamedDataSource {
                 while (q.endsWith(";")) {
                     q = q.substring(0, q.length() - 1).trim();
                 }
-                loadedQuery = new StringBuilder(q.length() + 64).append(QUERY_TABLE_BEGIN).append('(').append(q)
-                        .append(") t").append(QUERY_TABLE_END).toString();
+                boolean isSqlServer = SqlServerMetadata.isSqlServer(conn);
+
+                // SQL Server limitations:
+                // - derived table requires column names (e.g. "SELECT 1" breaks)
+                // - CTE ("WITH ...") cannot be nested into parentheses
+                if (isSqlServer) {
+                    // Prefer recommended SQL Server metadata API instead of deprecated FMTONLY
+                    // https://learn.microsoft.com/en-us/sql/t-sql/statements/set-fmtonly-transact-sql
+                    try {
+                        return SqlServerMetadata.inferTypesByDescribe(conn, q, params, converter,
+                                this.getQueryTimeout(params.getTimeout()));
+                    } catch (SQLException e) {
+                        log.warn("Failed to infer columns using sp_describe_first_result_set for datasource [{}], falling back",
+                                getId(), e);
+                        // fallback to original behavior (may execute)
+                        loadedQuery = q;
+                    }
+                } else {
+                    loadedQuery = new StringBuilder(q.length() + 64).append(QUERY_TABLE_BEGIN).append('(').append(q)
+                            .append(") t").append(QUERY_TABLE_END).toString();
+                }
             }
 
             ColumnDefinition[] columns = getColumnsFromResultSet(getFirstQueryResult(stmt, stmt.execute(loadedQuery)),
