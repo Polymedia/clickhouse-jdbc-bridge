@@ -363,8 +363,22 @@ public class JdbcBridgeVerticle extends AbstractVerticle implements ExtensionMan
     }
 
     private void errorHandler(RoutingContext ctx) {
-        log.error("Failed to respond", ctx.failure());
-        ctx.response().setStatusCode(500).end(ctx.failure().getMessage());
+        Throwable failure = ctx.failure();
+        log.error("Failed to respond", failure);
+
+        int statusCode = 500;
+        if (failure != null) {
+            // Treat query/data access errors as client errors to avoid pointless retries on ClickHouse side.
+            // Bridge internal errors should still be 5xx.
+            if (failure instanceof com.clickhouse.jdbcbridge.core.DataAccessException
+                    || failure.getCause() instanceof com.clickhouse.jdbcbridge.core.DataAccessException
+                    || failure instanceof java.sql.SQLException
+                    || failure.getCause() instanceof java.sql.SQLException) {
+                statusCode = 400;
+            }
+        }
+
+        ctx.response().setStatusCode(statusCode).end(failure == null ? "Unknown error" : failure.getMessage());
     }
 
     private void handlePing(RoutingContext ctx) {
